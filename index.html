@@ -1,0 +1,514 @@
+<!DOCTYPE HTML-->
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="css/jquery-ui.css">
+<link rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css">
+<link rel="stylesheet" href="css/jquery.mobile.theme-1.4.5.min.css">
+<script src="phonegap.js"></script>
+<script src="cordova.js"></script>
+<script type="text/javascript" src="js/jquery-ui.js"></script>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/jquery.mobile-1.4.5.min.js"></script> 
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+<style type="text/css">
+#map-canvas{
+        height: 100%;
+        width: 100%;
+        padding:0px;
+        position: absolute;
+        top: 40px;
+        right: 0px;
+        bottom:0px;
+        left:0px;
+    }
+p{
+  text-align:center;
+}
+#uno{
+     width:400px;
+     margin-left: 400px;
+     margin-top: 200px;
+     border:3px dotted red;
+     
+}
+#l1{
+    text-align: center;
+    display:inline-block;
+    color:Red;
+    font-family:Monotype Corsiva;
+    font-size:48pt;
+    width:978px;
+    z-index:115;
+    left: 190px;
+    position: absolute; 
+    top:17px
+}
+#fooder1{
+    margin-top: 200px;
+    background: red;
+}
+#m1{
+    display:inline-block;
+    color:yellow;
+    font-family:Monotype Corsiva;
+    font-size:30pt;
+    width:978px;
+    z-index:115;
+    left: 190px;
+    position: absolute; 
+    top:100px;
+    background: gray;
+  
+    
+}
+#Image1{
+     height:81px;
+     width:877px;
+     border-width:0px;
+     z-index: 114;
+     left: 250px;
+     position: absolute;
+     top: 23px
+            }
+     #dos{
+         width: 500px;
+         background: lightblue;
+         
+         }
+         #fooder2{
+             margin-top: 100px;
+             background: gray;
+         }
+         #tres{
+             width: 400px;
+         }
+         #fooder3{
+             margin-top: 400px;
+         }
+         #cuatro{
+             with: 400px;
+         }
+         #Image2{
+             width: 300px;
+             higth:400px;
+             margin-left: 900px;
+             position: absolute;
+             margin-top: 200px;
+         }
+         #Image3{
+             width: 300px;
+             higth:400px;
+             margin-left: 50px;
+             position: absolute;
+             margin-top: 200px;
+         }
+         #Image4{
+             width: 300px;
+             higth:400px;
+             margin-left: 800px;
+             position: absolute;
+             margin-top: 20px;
+         }
+         #Image5{
+             width: 300px;
+             higth:100px;
+             margin-left: 500px;
+             position: absolute;
+             margin-top: 20px;
+         }
+          #Image6{
+             width: 300px;
+             higth:100px;
+             margin-left: 900px;
+             position: absolute;
+             margin-top: 20px;
+         }
+</style>
+<script type="text/javascript">
+$(document).ready(function inicio(){
+alert("Ejecución correcta");
+    var btnGuardar=$("#btnGuardar");//Selección del boton
+    btnGuardar.click(function guardarInf(){//utilzación del evento clic del boton    
+     
+      var nombre=$("#nombre").val();
+      var apellido=$("#txtApellidos").val();
+      var noCotrol=$("#txtNoControl").val();
+      var edad=$("#txtEdad").val();
+       alert("Ejecucion correcta: nom="+nombre+"&aps="+apellido+"&nc="+noCotrol+"&ed="+edad);
+	  $.ajax({
+	    type:"POST",
+	    url:"http://itslmoviles.260mb.net/miky/guardarDatos.php",
+	    data:"nom="+nombre+"&aps="+apellido+"&nc="+noCotrol+"&ed="+edad,
+	    success: respuestaServ
+	  });      
+	  
+	  function respuestaServ(datos){
+	    alert("respuesta: "+datos);
+	  }	  
+    });
+    
+   var Consultar=$("#btnConsultar"); 
+    Consultar.click(function consulta(){
+      $.ajax({
+	type:"POST",
+	url:"http://itslmoviles.260mb.net/miky/consultaTodo.php",
+	data:"",
+	success: resConsultas
+      });
+      
+      function resConsultas(datos){
+	//alert("Respuesta: "+datos);
+	var dat=$.parseJSON(datos);
+	var divRes=$("#idResultado");
+	divRes.html("");
+	divRes.append("<table border='1' id='tab'><th> ID </th><th> Nombre</th>"
+	+"<th>Apellidos</th><th>No. Control</th><th>Edad</th>");
+	var tabla=$("#tab");	
+	for(var i in dat){
+	tabla.append("<tr><td>"+dat[i].Id_Estudiante+"</td>"
+	+"<td>"+dat[i].Nombre+"</td>"
+	+"<td>"+dat[i].Apellidos+"</td>"
+	+"<td>"+dat[i].No_Control+"</td>"
+	+"<td>"+dat[i].Edad+"</td></tr>");
+	}
+	tabla.append("</table>");
+      }
+    });
+    
+    var btnCons2=$("#btnCons2");
+    btnCons2.click(function cons2(){
+    
+      var idConsulta=$("#idConsulta").val();
+	$.ajax({
+	  type:"POST",
+	  url:"http://itslmoviles.260mb.net/miky/consultaUno.php",
+	  data:"id="+idConsulta,
+	  success:resConsUno
+	});
+	
+	function resConsUno(datos){
+	  var dat=$.parseJSON(datos);
+	  var divRes=$("#idResCont2");
+	  divRes.html("");
+	  divRes.append("<table border='1' id='tab2'><th> ID </th><th> Nombre</th>"
+	  +"<th>Apellidos</th><th>No. Control</th><th>Edad</th>");
+	  var tabla=$("#tab2");	
+	  for(var i in dat){
+	  tabla.append("<tr><td>"+dat[i].Id_Estudiante+"</td>"
+	  +"<td>"+dat[i].Nombre+"</td>"
+	  +"<td>"+dat[i].Apellidos+"</td>"
+	  +"<td>"+dat[i].No_Control+"</td>"
+	  +"<td>"+dat[i].Edad+"</td></tr>");
+	}
+	tabla.append("</table>");
+      }
+	
+    });
+    
+    var btnMostAct=$("#btnMostAct");
+    btnMostAct.click(function MostrarDatos(){
+      $.ajax({
+	type:"POST",
+	url:"http://itslmoviles.260mb.net/miky/consultaTodo.php",
+	data:"",
+	success: resMostrar
+      });
+      
+      function resMostrar(datos){
+	//alert("Respuesta: "+datos);
+	var dat=$.parseJSON(datos);
+	var divRes=$("#resDatosActualizar");
+	divRes.html("");
+	divRes.append("<table border='1' id='tab3'><th> ID </th><th> Nombre</th>"
+	+"<th>Apellidos</th><th>No. Control</th><th>Edad</th>");
+	var tabla=$("#tab3");	
+	for(var i in dat){
+	tabla.append("<tr><td>"+dat[i].Id_Estudiante+"</td>"
+	+"<td>"+dat[i].Nombre+"</td>"
+	+"<td>"+dat[i].Apellidos+"</td>"
+	+"<td>"+dat[i].No_Control+"</td>"
+	+"<td>"+dat[i].Edad+"</td></tr>");
+	}
+	tabla.append("</table>");
+      }
+    });
+    
+    var btnCargarDatosAct=$("#btnCargarDatosAct");
+    btnCargarDatosAct.click(function cargarDatos(){
+      var idActualizar=$("#idActualizar").val();
+	$.ajax({
+	  type:"POST",
+	  url:"http://itslmoviles.260mb.net/miky/consultaUno.php",
+	  data:"id="+idActualizar,
+	  success:resCargarDatos
+	});
+	
+	function resCargarDatos(datos){
+	//alert("listo:"+datos);
+	  var dat=$.parseJSON(datos);
+	  var divRes=$("#idDibujarControles");
+	  divRes.html("");
+	  divRes.append("<label for='idReg'>ID</label><input type='text' id='idReg' disabled='true'>"+
+	  "<label for='nomReg'>Nombre:</label><input type='text' id='nomReg'>"+
+	  "<label for='nomAPP'>Apellidos:</label><input type='text' id='nomAPP'>"+
+	  "<label for='ncReg'>No. Control:</label><input type='text' id='ncReg'>"+
+	  "<label for='edadReg'>Edad:</label><input type='text' id='edadReg'>");
+	  var i=0;
+	  $("#idReg").val(dat[i].Id_Estudiante);
+	  $("#nomReg").val(dat[i].Nombre);
+	  $("#nomAPP").val(dat[i].Apellidos);
+	  $("#ncReg").val(dat[i].No_Control);
+	  $("#edadReg").val(dat[i].Edad);
+
+	} 
+    });
+    
+    var btnGuardarAct=$("#btnGuardarAct");
+    btnGuardarAct.click(function guardarAct(){
+        var id=parseInt($("#idReg").val());
+	var nombre=$("#nomReg").val();
+      var apellido=$("#nomAPP").val();
+      var noCotrol=$("#ncReg").val();
+      var edad=$("#edadReg").val();
+       //alert("Ejecución correcta: nom="+nombre+"&aps="+apellido+"&nc="+noCotrol+"&ed="+edad);
+	  $.ajax({
+	    type:"POST",
+	    url:"http://itslmoviles.260mb.net/miky/guardarDatosAct.php",
+	    data:"id="+id+"&nom="+nombre+"&aps="+apellido+"&nc="+noCotrol+"&ed="+edad,
+	    success: respGuardarAct
+	  });      
+	  
+	  function respGuardarAct(datos){
+	    alert("respuesta: "+datos);
+	  }	  
+    });
+    var btnMostEliminar=$("#btnMostEliminar");
+     btnMostEliminar.click(function eliminar(){
+         $.ajax({
+	type:"POST",
+	url:"http://itslmoviles.260mb.net/miky/consultaTodo.php",
+	data:"",
+	success: resConsEliminar
+      });
+         function resConsEliminar(datos){
+        var dat=$.parseJSON(datos);
+	var divRes=$("#resDatosEliminar");
+	divRes.html("");
+	divRes.append("<table border='1' id='tab4'><th> ID </th><th> Nombre</th>"
+	+"<th>Apellidos</th><th>No. Control</th><th>Edad</th>");
+	var tabla=$("#tab4");	
+	for(var i in dat){
+	tabla.append("<tr><td>"+dat[i].Id_Estudiante+"</td>"
+	+"<td>"+dat[i].Nombre+"</td>"
+	+"<td>"+dat[i].Apellidos+"</td>"
+	+"<td>"+dat[i].No_Control+"</td>"
+	+"<td>"+dat[i].Edad+"</td></tr>");
+	}
+	tabla.append("</table>");
+         }
+     });
+   var  btnEliminar=$("#btnEliminar");
+   btnEliminar.click(function conEliminar(){
+       var Id=("#idEliminar").val();
+        $.ajax({
+	type:"POST",
+	url:"http://itslmoviles.260mb.net/miky/Eliminar.php",
+	data:"id"+Id,
+	success: eliminado
+      });
+      function eliminado(datos){
+          alert("Respuesta:"+datos);
+      }
+   });
+   document.addEventListener("deviceready", function(){
+		$('#TomarFoto').tap(function(){
+			navigator.device.capture.captureImage(function(mediaFiles){
+			path = mediaFiles[0].fullPath;
+			$('#Foto').append('<br><img src="'+path+'" width="100%" />').attr('rel',path);
+			},function(error){
+			navigator.notification.alert('Error code: ' + error.code, null, 'Capture Error');
+			},{limit:1});
+		});
+	}, false);
+});
+ $(document).on("pageinit","#PaginaMapa", function(e, data){
+//$(document).ready(function (){
+    //document.addEventListener("deviceready", onDeviceReady, false);
+
+    //function onDeviveReady(){
+        var defaultPos=new google.maps.LatLng(19.463948, -97.686259);
+        if(navigator.geolocation){
+            alert("listo");
+            function exito(posicion){
+                MuestraMapa(new google.maps.LatLng(posicion.coords.longitude));
+            }
+            function falla(error){
+                
+                alert("Error en el servicio de geolocalizacion"+error.code);
+                 MuestraMapa(defaultPos);
+            }
+            var opciones={maximumAge:500000, enableHighAccuracy:true, timeout:5000};
+            navigator.geolocation.getCurrentPosition(exito, falla, opciones);
+            
+        }else{
+            MuestraMapa(defaultPos);
+        }
+   // }
+    function MuestraMapa(latlng){
+      var miOptions={
+        zoom:16,
+        center:latlng,
+        disabledefaultUI:true,
+        mapTypeId: google.maps.MapTypeId.ROADMAP};   
+      var map= new google.maps.Map(document.getElementById("map-canvas"), miOptions);
+      var infoVentana=new google.maps.InfoWindow({
+          position:latlng,
+          content:"<p>Tu posicion actual es: </p>"+latlng
+      });
+      
+      var marcar=new google.mapas.Marker({
+          position:latlng,
+          map:map,
+          title:"mi posicion",
+          animation:google.maps.animation.DROP
+      });
+       google.maps.event.addListener(marca, "click", function(){
+           infoVentana.open(map, marca);
+       });
+    }
+});
+</script>
+</head>
+<body>
+<div data-role="page" id="Menu">
+    
+    <div data-role="header">
+        <marquee id="m1"> Bienvenidos - Bienvenidos - Bienvenidos</marquee>
+        <label id="l1">Farmacia del doctor Miky</label>
+        <img id="Image1" src="img/2fondo.gif"/>
+    </div>
+     <img id="Image2" src="img/1.jpg"/>
+     <img id="Image3" src="img/4.jpg"/>
+    <div data-role="content" id="uno">  
+      <ul data-role="listview">
+	<li><a href="#insertar">Insertar registros</a></li>
+	<li><a href="#consulta">Consultar todos los registros</a></li>
+	<li><a href="#consulta2">Consultar un registro</a></li>
+	<li><a href="#Actualizar">Actualizar un registro</a></li>
+        <li><a href="#Eliminar">Eliminar un registro</a></li>
+        <li><a href="#principal">Tomar una fotografia</a></li>
+        <li><a href="#PaginaMapa">Mostrar tu ubicacion</a></li>
+      </ul>
+       
+    </div>
+    <div data-role="footer" id="fooder1">
+      <p>Derechos reservados</p>
+    </div>
+</div>
+
+<div data-role="page" id="insertar" bgcolor="blue">
+    <div data-role="header">
+      <p>Insercion de registros</p>
+    </div>
+    <img id="Image4" src="img/7.jpg"/>
+    <div data-role="content" id="dos">
+      <label for="nombre">Nombre del producto:</label>
+      <input type="text" id="nombre" placeholder="Nombre del producto">
+      <label for="txtApellidos">Ingrediente activo:</label>
+      <input type="text" id="txtApellidos" placeholder="Ingrediente activo">
+      <label for="txtNoControl">Cantidad que ingresa:</label>
+      <input type="text" id="txtNoControl" placeholder="Numero que ingresa">
+      <label for="txtEdad">Precio de venta:</label>
+      <input type="text" id="txtEdad" placeholder="Precio de venta">
+      <input type="button" id="btnGuardar" value="Guardar">
+    </div>
+    <div data-role="footer" id="fooder2">
+      <p>Derechos reservados</p>
+    </div>
+</div>
+
+<div data-role="page" id="consulta">
+    <div data-role="header">
+      <p>Consultar registros</p>
+    </div>
+    <img id="Image5" src="img/5.gif"/>
+    <img id="Image6" src="img/6.gif"/>
+    <div data-role="content" id="tres">
+      <input type="button" id="btnConsultar" value="Consultar">
+      <div id="idResultado"></div>
+    </div>
+    <div data-role="footer" id="fooder3">
+      <p>Derechos reservados</p>
+    </div>
+</div>
+
+<div data-role="page" id="consulta2">
+    <div data-role="header">
+      <p>Consultar un registro</p>
+    </div>
+    <div data-role="content" id="cuatro">
+      <label for="idConsulta">ID:</label>
+      <input type="text" id="idConsulta" >
+      <input type="button" id="btnCons2" value="Consultar">
+      <div id="idResCont2"></div>
+    </div>
+    <div data-role="footer">
+      <p>Derechos reservados</p>
+    </div>
+</div>
+
+<div data-role="page" id="Actualizar">
+    <div data-role="header">
+      <p>Actualizar un registro</p>
+    </div>
+    <div data-role="content">
+      <input type="button" id="btnMostAct" value="Mostrar todos los registros">
+      <div id="resDatosActualizar"></div>
+      <label for="idActualizar">ID:</label>
+      <input type="text" id="idActualizar" >
+      <input type="button" id="btnCargarDatosAct" value="Cargar datos">
+      <div id="idDibujarControles"></div>
+      <input type="button" id="btnGuardarAct" value="Guardar">      
+    </div>
+    <div data-role="footer">
+      <p>Derechos reservados</p>
+    </div>
+</div>
+     <div data-role="page" id="Eliminar">
+    <div data-role="header">
+      <p>Eliminar un registro</p>
+    </div>
+    <div data-role="content">
+      <input type="button" id="btnMostEliminar" value="Mostrar todos los registros">
+      <div id="resDatosEliminar"></div>
+      <label for="idEliminar">ID:</label>
+      <input type="text" id="idEliminar" >
+      <input type="button" id="btnEliminar" value="Eliminar">      
+    </div>
+    <div data-role="footer">
+      <p>Derechos reservados</p>
+    </div>
+</div>
+    <div data-role="page" id="principal">
+  <div data-role="header">
+    <p>Manejo de camara</p>
+  </div>
+  <div data-role="content">
+    <input type="button" id="TomarFoto" value="Tomar Foto">
+    <div id="Foto"></div>
+  </div>
+  <div data-role="footer">
+    <p>pie de página</p>
+  </div>
+</div>
+    <div data-role="page" id="PaginaMapa" data-url="map-page">
+  <div data-role="header">
+      <h1>Tu posicion actual</h1>
+  </div>
+  <div data-role="content">
+      <div id="map-canvas"></div>
+  </div>
+</div>
+</body>
+</html>
